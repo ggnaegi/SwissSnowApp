@@ -39,7 +39,6 @@ public class PlzAndSnowStatisticsOrchestration
     /// <returns></returns>
     [FunctionName("PlzAndSnowStatisticsGet")]
     [OpenApiOperation("Run", new[] {"DurableFunction.GetPlzAndSnowStatistics"})]
-    [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
     [OpenApiParameter("zip_code", In = ParameterLocation.Query, Required = true, Type = typeof(string),
         Description = "The swiss zip code")]
     [OpenApiResponseWithBody(HttpStatusCode.OK, "text/plain", typeof(IEnumerable<SnowStatisticsDto>),

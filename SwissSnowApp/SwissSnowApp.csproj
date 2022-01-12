@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
+    <UserSecretsId>5d68904d-3e35-49d7-b4b4-b4487d43fb4b</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.0" />
@@ -13,6 +14,7 @@
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.DurableTask" Version="2.6.0" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.OpenApi" Version="1.0.0" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.ServiceBus" Version="5.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.0.1" />
     <PackageReference Include="StackExchange.Redis" Version="2.2.88" />
   </ItemGroup>

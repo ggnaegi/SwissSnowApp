@@ -11,7 +11,9 @@ using Microsoft.Azure.Cosmos.Linq;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using SwissSnowApp.Dtos.SnowStatistics;
 using SwissSnowApp.Entities;
@@ -31,6 +33,7 @@ public class SnowStatisticsFunction
 
     [FunctionName("SnowStatisticsFunction")]
     [OpenApiOperation("Run", new[] {"GetSnowStatistics"})]
+    [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
     [OpenApiRequestBody("application/json", typeof(GetSnowDataDto))]
     [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json",
         typeof(IEnumerable<SnowStatisticsDto>), Description = "The OK response")]

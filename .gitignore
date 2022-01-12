@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/SwissSnowApp/Properties/ServiceDependencies/SwissSnowApp - Zip Deploy
+/SwissSnowApp/Properties
