@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using SwissSnowApp.Dtos.Plz;
+using SwissSnowApp.Dtos.PlzAndSnowStatistics;
 using SwissSnowApp.Dtos.SnowStatistics;
 
 namespace SwissSnowApp;
@@ -49,7 +50,10 @@ public class PlzAndSnowStatisticsOrchestration
     )
     {
         var zipCodeValue = req.Query["zip_code"];
-        var instanceId = await durableClient.StartNewAsync("PlzAndSnowStatisticsOrchestration", zipCodeValue);
+        var instanceId = await durableClient.StartNewAsync("PlzAndSnowStatisticsOrchestration", new QueryDto
+        {
+            Plz = zipCodeValue
+        });
 
         _logger.LogInformation($"¨Started orchestration with id {instanceId}");
 
@@ -66,8 +70,8 @@ public class PlzAndSnowStatisticsOrchestration
     public async Task<IEnumerable<SnowStatisticsDto>> RunOrchestrator(
         [OrchestrationTrigger] IDurableOrchestrationContext context)
     {
-        var plz = context.GetInput<string>();
-        var cities = await RetrieveCities(context, plz);
+        var queryDto = context.GetInput<QueryDto>();
+        var cities = await RetrieveCities(context, queryDto.Plz);
 
         if (cities == null) return null;
 

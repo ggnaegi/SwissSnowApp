@@ -22,7 +22,7 @@ public class SnowStatisticsRetriever
 
     [FunctionName("SnowStatisticsRetriever")]
     public async Task Run(
-        [TimerTrigger("*/10 * * * * *")] TimerInfo timerInfo,
+        [TimerTrigger("0 0 * * *")] TimerInfo timerInfo,
         [ServiceBus("snowstatisticsqueue", Connection = "ServiceBusConnection")]
         IAsyncCollector<string> chunks)
     {
