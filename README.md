@@ -12,7 +12,7 @@ This solution includes several azure functions with triggers.
 - Service Queue Input triggered function, parsing snow conditions and saving them to cosmos db instance ```SnowStatisticsParser```
 - Http GET Triggered function ```PlzFunction``` retrieving cities referenced by zip code from swiss post, caching data in redis
 - Http POST Triggered function ```SnowStatisticsFunction``` retrieving snow conditions by cities names from cosmos db
-- Http GET Triggered durable function, starting background task for snow conditions referenced by zip code retrieval ```PlzAndSnowStatisticsOrchestration```
+- Http GET Triggered durable function, starting background task, getting snow conditions referenced by zip code retrieval ```PlzAndSnowStatisticsOrchestration```
 
 ![image](https://user-images.githubusercontent.com/58469901/149235990-7d455c59-c0db-40a2-a84e-26a822cd5a30.png)
 
