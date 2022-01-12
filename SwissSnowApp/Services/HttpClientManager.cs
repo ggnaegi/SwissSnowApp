@@ -9,66 +9,58 @@ using SwissSnowApp.Dtos.Plz;
 using SwissSnowApp.Dtos.SnowStatistics;
 using SwissSnowApp.Interfaces;
 
-namespace SwissSnowApp.Services
+namespace SwissSnowApp.Services;
+
+/// <summary>
+///     HttpClientManager, Retrieving data about cities using the zip code as
+///     reference, calling an API from the swiss post.
+/// </summary>
+public class HttpClientManager : IHttpClientManager
 {
-    /// <summary>
-    /// HttpClientManager, Retrieving data about cities using the zip code as
-    /// reference, calling an API from the swiss post.
-    /// </summary>
-    public class HttpClientManager : IHttpClientManager
+    private readonly ILogger<HttpClientManager> _logger;
+    private readonly IMapper _mapper;
+
+    public HttpClientManager(IMapper mapper, ILogger<HttpClientManager> logger)
     {
-        private readonly IMapper _mapper;
-        private readonly ILogger<HttpClientManager> _logger;
+        _logger = logger;
+        _mapper = mapper;
+    }
 
-        public HttpClientManager(IMapper mapper, ILogger<HttpClientManager> logger)
-        {
-            _logger = logger;
-            _mapper = mapper;
-        }
+    /// <summary>
+    ///     Retrieving cities referenced by zip code
+    ///     calling swiss post api
+    /// </summary>
+    /// <param name="zipCode"></param>
+    /// <returns></returns>
+    public async Task<IEnumerable<CityDto>> RetrieveCities(string zipCode)
+    {
+        _logger.LogInformation($"Now retrieving cities with zip code {zipCode}");
+        var httpClient = new HttpClient();
 
-        /// <summary>
-        /// Retrieving cities referenced by zip code
-        /// calling swiss post api
-        /// </summary>
-        /// <param name="zipCode"></param>
-        /// <returns></returns>
-        public async Task<IEnumerable<CityDto>> RetrieveCities(string zipCode)
-        {
-            _logger.LogInformation($"Now retrieving cities with zip code {zipCode}");
-            var httpClient = new HttpClient();
+        var resourceUri = Environment.GetEnvironmentVariable("PostPlzEndpoint");
+        var result = await httpClient.GetAsync($"{resourceUri}{zipCode}");
+        if (!result.IsSuccessStatusCode) return null;
 
-            var resourceUri = Environment.GetEnvironmentVariable("PostPlzEndpoint");
-            var result = await httpClient.GetAsync($"{resourceUri}{zipCode}");
-            if (!result.IsSuccessStatusCode)
-            {
-                return null;
-            }
+        var bodyString = await result.Content.ReadAsStringAsync();
+        var postZipCode = JsonConvert.DeserializeObject<PostZipCodeDto>(bodyString);
 
-            var bodyString = await result.Content.ReadAsStringAsync();
-            var postZipCode = JsonConvert.DeserializeObject<PostZipCodeDto>(bodyString);
+        return _mapper.Map<IEnumerable<CityDto>>(postZipCode.Records);
+    }
 
-            return _mapper.Map<IEnumerable<CityDto>>(postZipCode.Records);
-        }
-        
-        /// <summary>
-        /// Retrieving snow data from meteoswiss
-        /// </summary>
-        /// <returns></returns>
-        public async Task<SnowDataDto> RetrieveSnowData()
-        {
-            _logger.LogInformation("Now retrieving snow data from meteoswiss");
-            var httpClient = new HttpClient();
+    /// <summary>
+    ///     Retrieving snow data from meteoswiss
+    /// </summary>
+    /// <returns></returns>
+    public async Task<SnowDataDto> RetrieveSnowData()
+    {
+        _logger.LogInformation("Now retrieving snow data from meteoswiss");
+        var httpClient = new HttpClient();
 
-            var resourceUri = Environment.GetEnvironmentVariable("MeteoSwissEndpoint");
-            var result = await httpClient.GetAsync(resourceUri);
-            if (!result.IsSuccessStatusCode)
-            {
-                return null;
-            }
+        var resourceUri = Environment.GetEnvironmentVariable("MeteoSwissEndpoint");
+        var result = await httpClient.GetAsync(resourceUri);
+        if (!result.IsSuccessStatusCode) return null;
 
-            var bodyString = await result.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<SnowDataDto>(bodyString);
-
-        }
+        var bodyString = await result.Content.ReadAsStringAsync();
+        return JsonConvert.DeserializeObject<SnowDataDto>(bodyString);
     }
 }

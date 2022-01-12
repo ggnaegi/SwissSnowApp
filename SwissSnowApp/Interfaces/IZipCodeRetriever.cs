@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using SwissSnowApp.Dtos.Plz;
 
-namespace SwissSnowApp.Interfaces
+namespace SwissSnowApp.Interfaces;
+
+public interface IZipCodeRetriever
 {
-    public interface IZipCodeRetriever
-    {
-        Task<IEnumerable<CityDto>> RetrieveZipCode(string zipCode);
-    }
+    Task<IEnumerable<CityDto>> RetrieveZipCode(string zipCode);
 }

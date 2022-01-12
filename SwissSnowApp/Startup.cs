@@ -7,16 +7,16 @@ using SwissSnowApp.Interfaces;
 using SwissSnowApp.Services;
 
 [assembly: FunctionsStartup(typeof(Startup))]
-namespace SwissSnowApp
+
+namespace SwissSnowApp;
+
+public class Startup : FunctionsStartup
 {
-    public class Startup : FunctionsStartup
+    public override void Configure(IFunctionsHostBuilder builder)
     {
-        public override void Configure(IFunctionsHostBuilder builder)
-        {
-            builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            builder.Services.AddScoped<ICacheManager, CacheManager>();
-            builder.Services.AddScoped<IZipCodeRetriever, ZipCodeRetriever>();
-            builder.Services.AddScoped<IHttpClientManager, HttpClientManager>();
-        }
+        builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+        builder.Services.AddScoped<ICacheManager, CacheManager>();
+        builder.Services.AddScoped<IZipCodeRetriever, ZipCodeRetriever>();
+        builder.Services.AddScoped<IHttpClientManager, HttpClientManager>();
     }
 }

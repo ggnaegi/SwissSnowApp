@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace SwissSnowApp.Dtos.SnowStatistics
+namespace SwissSnowApp.Dtos.SnowStatistics;
+
+public class GetSnowDataDto
 {
-    public class GetSnowDataDto
-    {
-        public IEnumerable<string> CitiesNames { get; set; }
-    }
+    public IEnumerable<string> CitiesNames { get; set; }
 }

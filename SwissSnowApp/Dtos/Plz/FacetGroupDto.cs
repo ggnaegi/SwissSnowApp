@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace SwissSnowApp.Dtos.Plz
+namespace SwissSnowApp.Dtos.Plz;
+
+public class FacetGroupDto
 {
-    public class FacetGroupDto
-    {
-        public string Name { get; set; }
-        public IList<FacetDto> Facets { get; set; }
-    }
+    public string Name { get; set; }
+    public IList<FacetDto> Facets { get; set; }
 }
