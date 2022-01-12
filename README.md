@@ -7,6 +7,13 @@ Retrieve snow conditions (depth) using swiss zip code as query parameter
 "MeteoSwissEndpoint": "https://data.geo.admin.ch/ch.meteoschweiz.messwerte-gesamtschnee-1d/ch.meteoschweiz.messwerte-gesamtschnee-1d_de.json"
 ```
 
+This solution includes several azure functions with triggers.
+- Timer Triggered function, retrieving snow conditions from meteoswiss ```SnowStatisticsRetriever```, saving data to azure service bus queue
+- Service Queue Input triggered function, parsing snow conditions and saving them to cosmos db instance ```SnowStatisticsParser```
+- Http GET Triggered function ```PlzFunction``` retrieving cities referenced by zip code from swiss post, caching data in redis
+- Http POST Triggered function ```SnowStatisticsFunction``` retrieving snow conditions by cities names from cosmos db
+- Http GET Triggered durable function, starting background task for snow conditions referenced by zip code retrieval ```PlzAndSnowStatisticsOrchestration```
+
 Example with zip code 7260 (Davos Dorf)
 ```json
 {
