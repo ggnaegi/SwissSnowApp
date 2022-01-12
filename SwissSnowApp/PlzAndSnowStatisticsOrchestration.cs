@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -75,7 +76,7 @@ public class PlzAndSnowStatisticsOrchestration
 
         if (cities == null) return null;
 
-        var distinctCitiesNames = cities.Select(x => x.Name).Distinct().ToArray();
+        var distinctCitiesNames = cities.Select(x => Regex.Match(x.Name, @"^([\w\-]+)").Value).Distinct().ToArray();
         var snowStatistics = await RetrieveSnowStatistics(context, distinctCitiesNames);
 
         return snowStatistics;
@@ -98,6 +99,7 @@ public class PlzAndSnowStatisticsOrchestration
         _logger.LogInformation($"Retrieving cities referenced by plz {plz}");
 
         var plzResult = await context.CallHttpAsync(HttpMethod.Get, plzFunctionUri);
+
         return plzResult.StatusCode != HttpStatusCode.OK
             ? null
             : JsonConvert.DeserializeObject<IEnumerable<CityDto>>(plzResult.Content);

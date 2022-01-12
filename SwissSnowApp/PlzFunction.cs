@@ -31,7 +31,7 @@ public class PlzFunction
         Description = "The swiss zip code")]
     [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", typeof(string), Description = "The OK response")]
     public async Task<IActionResult> GetPlz(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req)
     {
         _logger.LogInformation("Azure function started, triggered by HTTP trigger GET.");
 
