@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -94,7 +95,7 @@ public class PlzAndSnowStatisticsOrchestration
         if (plzFunctionEndpoint == null)
             throw new InvalidOperationException("Plz function endpoint string can't be null!");
 
-        var plzFunctionUri = new Uri($@"{plzFunctionEndpoint}?zip_code={plz}");
+        var plzFunctionUri = UriWithZipCode(plz, plzFunctionEndpoint);
         _logger.LogInformation($"Retrieving cities referenced by plz {plz}");
 
         var plzResult = await context.CallHttpAsync(HttpMethod.Get, plzFunctionUri);
@@ -102,6 +103,22 @@ public class PlzAndSnowStatisticsOrchestration
         return plzResult.StatusCode != HttpStatusCode.OK
             ? null
             : JsonConvert.DeserializeObject<IEnumerable<CityDto>>(plzResult.Content);
+    }
+
+    /// <summary>
+    /// Since we need to pass code for azure function
+    /// we can't just append query parameter zip_code to url
+    /// </summary>
+    /// <param name="plz"></param>
+    /// <param name="plzFunctionEndpoint"></param>
+    /// <returns></returns>
+    private static Uri UriWithZipCode(string plz, string plzFunctionEndpoint)
+    {
+        var uriBuilder = new UriBuilder(plzFunctionEndpoint);
+        var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+        query["zip_code"] = plz;
+        uriBuilder.Query = query.ToString() ?? string.Empty;
+        return uriBuilder.Uri;
     }
 
     /// <summary>
