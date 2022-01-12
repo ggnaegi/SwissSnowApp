@@ -32,3 +32,29 @@ Example with zip code 7260 (Davos Dorf)
   "lastUpdatedTime": "2022-01-12T22:07:10Z"
 }
 ```
+
+or 6060, Sarnen
+```json
+{
+  "name": "PlzAndSnowStatisticsOrchestration",
+  "instanceId": "15a469da16d54967a27c8fd80ac446e6",
+  "runtimeStatus": "Completed",
+  "input": {
+    "Plz": "6060"
+  },
+  "customStatus": null,
+  "output": [
+  {
+    "StationId": "SRN",
+    "StationName": "Sarnen",
+    "AltitudeInM": 471,
+    "SnowInCm": 0,
+    "SnowMeasureDate": "2022-01-12T07:00:00+01:00",
+    "PosX": 2662147.8,
+    "PosY": 1194359.9
+  }
+  ],
+  "createdTime": "2022-01-12T22:13:57Z",
+  "lastUpdatedTime": "2022-01-12T22:14:00Z"
+}
+```
