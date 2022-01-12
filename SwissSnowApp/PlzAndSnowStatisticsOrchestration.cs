@@ -35,9 +35,9 @@ namespace SwissSnowApp
         /// <param name="durableClient"></param>
         /// <returns></returns>
         [FunctionName("PlzAndSnowStatisticsGet")]
-        [OpenApiOperation(operationId: "Run", tags: new[] {"name"})]
+        [OpenApiOperation(operationId: "Run", tags: new[] { "DurableFunction.GetPlzAndSnowStatistics" })]
         [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]
-        [OpenApiParameter(name: "name", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "The **Name** parameter")]
+        [OpenApiParameter(name: "zip_code", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "The swiss zip code")]
         [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(IEnumerable<SnowStatisticsDto>), Description = "The OK response")]
         public async Task<IActionResult> GetPlzAndSnowStatistics(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req, 

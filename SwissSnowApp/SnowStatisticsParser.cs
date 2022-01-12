@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -26,10 +29,11 @@ namespace SwissSnowApp
             [ServiceBusTrigger("snowstatisticsqueue", Connection = "ServiceBusConnection")] string base64String,
             [CosmosDB(
                 databaseName: "snowstatisticsdb",
-                collectionName: "snowstatisticscontainer",
-                ConnectionStringSetting = "CosmosDbConnection")]
-            IAsyncCollector<SnowStatisticsEntity> snowStatisticsCollection
-            )
+                containerName: "snowstatisticscontainer",
+                Connection = "CosmosDbConnection", 
+                Id = "Id")]
+            CosmosClient cosmosClient
+        )
         {
             _logger.LogInformation($"Function getting new snow statistics from service bus queue");
 
@@ -38,10 +42,36 @@ namespace SwissSnowApp
             var snowDataChunk = JsonConvert.DeserializeObject<IEnumerable<FeatureDto>>(json);
             var snowStatisticsEntities = _mapper.Map<IEnumerable<SnowStatisticsEntity>>(snowDataChunk);
 
-            foreach (var entity in snowStatisticsEntities)
+            var container = cosmosClient.GetDatabase("snowstatisticsdb").GetContainer("snowstatisticscontainer");
+            foreach (var entity in snowStatisticsEntities.Where(x => x.SnowMeasureDate != null))
             {
-                await snowStatisticsCollection.AddAsync(entity);
+                if (await EntryExists(entity.StationName, entity.SnowMeasureDate.Value, container))
+                {
+                    continue;
+                }
+
+                await container.CreateItemAsync(entity);
             }
+        }
+
+        /// <summary>
+        /// Checking if measure has already been imported
+        /// </summary>
+        /// <param name="stationName"></param>
+        /// <param name="snowMeasureDate"></param>
+        /// <param name="container"></param>
+        /// <returns></returns>
+        private async Task<bool> EntryExists(string stationName, DateTime snowMeasureDate, Container container)
+        {
+            var query = new QueryDefinition(
+                    "SELECT * FROM c Where c.StationName = @name and c.SnowMeasureDate = @measureDate")
+                .WithParameter("@name", stationName)
+                .WithParameter("@measureDate", snowMeasureDate);
+
+            using var resultSet = container.GetItemQueryIterator<SnowStatisticsEntity>(query);
+            var nextResult = await resultSet.ReadNextAsync();
+            var foundValue = nextResult.FirstOrDefault();
+            return foundValue != null;
         }
     }
 }

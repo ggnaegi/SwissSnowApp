@@ -1,9 +1,11 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace SwissSnowApp.Entities
 {
     public class SnowStatisticsEntity
     {
+        [JsonProperty("id")]
         public string Id { get; set; }
         public string StationId { get; set; }
         public string StationName { get; set; }

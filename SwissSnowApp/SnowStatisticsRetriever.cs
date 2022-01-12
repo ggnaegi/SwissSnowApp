@@ -23,7 +23,7 @@ namespace SwissSnowApp
 
         [FunctionName("SnowStatisticsRetriever")]
         public async Task Run(
-            [TimerTrigger("0 * * * *")] TimerInfo timerInfo,
+            [TimerTrigger("*/10 * * * * *")] TimerInfo timerInfo,
             [ServiceBus("snowstatisticsqueue", Connection = "ServiceBusConnection")] IAsyncCollector<string> chunks)
         {
             _logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");

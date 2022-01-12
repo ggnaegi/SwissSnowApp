@@ -32,11 +32,6 @@ namespace SwissSnowApp
                 .ForMember(dest => dest.StationName, opt => opt.MapFrom(x => x.Properties.StationName));
         }
 
-        private static string GetTimeStamp(DateTime? currentDate)
-        {
-            return currentDate == null ? null : new DateTimeOffset(currentDate.Value.ToUniversalTime()).ToUnixTimeMilliseconds().ToString();
-        }
-
         private static DateTime? ConvertReferenceTsToDateTime(string referenceTs)
         {
             if (!DateTime.TryParse(referenceTs, out var result))

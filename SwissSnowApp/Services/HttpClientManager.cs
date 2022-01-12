@@ -56,7 +56,7 @@ namespace SwissSnowApp.Services
         /// <returns></returns>
         public async Task<SnowDataDto> RetrieveSnowData()
         {
-            _logger.LogInformation("Now retrieving snow data from meteo swiss");
+            _logger.LogInformation("Now retrieving snow data from meteoswiss");
             var httpClient = new HttpClient();
 
             var resourceUri = Environment.GetEnvironmentVariable("MeteoSwissEndpoint");
@@ -66,17 +66,9 @@ namespace SwissSnowApp.Services
                 return null;
             }
 
-            try
-            {
-                var bodyString = await result.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<SnowDataDto>(bodyString);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-            
+            var bodyString = await result.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<SnowDataDto>(bodyString);
+
         }
     }
 }
