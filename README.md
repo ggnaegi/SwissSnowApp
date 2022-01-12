@@ -14,6 +14,9 @@ This solution includes several azure functions with triggers.
 - Http POST Triggered function ```SnowStatisticsFunction``` retrieving snow conditions by cities names from cosmos db
 - Http GET Triggered durable function, starting background task for snow conditions referenced by zip code retrieval ```PlzAndSnowStatisticsOrchestration```
 
+![image](https://user-images.githubusercontent.com/58469901/149235990-7d455c59-c0db-40a2-a84e-26a822cd5a30.png)
+
+
 Example with zip code 7260 (Davos Dorf)
 ```json
 {
