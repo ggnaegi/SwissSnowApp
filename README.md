@@ -68,3 +68,5 @@ or 6060, Sarnen
   "lastUpdatedTime": "2022-01-12T22:14:00Z"
 }
 ```
+## Using System Managed Identities instead of connection strings
+RBAC, known roles https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
