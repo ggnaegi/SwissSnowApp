@@ -79,5 +79,17 @@ Here it can be tricky, since we need to call endpoint for scope definition.
 
 ```az functionapp identity assign -g {groupName} -n SwissSnowApp --scope /subscriptions/{guid}/resourceGroups/{groupName}/providers/Microsoft.Storage/storageAccounts/{storageAccountName}```
 
-... redis cache: ```/providers/Microsoft.Cache/redis/{redisName}```,
+... redis cache: ```/providers/Microsoft.Cache/redis/{redisName}```
+
 ... service bus topics: ```providers/Microsoft.ServiceBus/namespaces/$service_bus_namespace/topics/$service_bus_topic/subscriptions/$service_bus_subscription```
+
+... service bus queues: 
+```powershell 
+PS /home/gnaegi> az functionapp identity assign -g {groupName} -n SwissSnowApp --scope /subscriptions/{guid}/resourceGroups/{groupName}/providers/Microsoft.ServiceBus/namespaces/{appName}/queues/{queueName}
+{
+  "principalId": "1ec9649f...",
+  "tenantId": "45a8141c...,
+  "type": "SystemAssigned",
+  "userAssignedIdentities": null
+}
+```
