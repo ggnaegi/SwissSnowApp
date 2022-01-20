@@ -70,6 +70,10 @@ or 6060, Sarnen
 ```
 ## Using System Managed Identities instead of connection strings
 RBAC, known roles https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
+Scopes, https://docs.microsoft.com/en-us/azure/role-based-access-control/scope-overview
+
+It's possible to get the scope (the ressource id) by using the following azure CLI method:
+```az cosmosdb show --name '<Your_Azure_Cosmos_account_name>' --resource-group '<CosmosDB_Resource_Group>' --query id```
 
 Here it can be tricky, since we need to call endpoint for scope definition.
 - If permission should be set for resource group (default: Contributor) 
